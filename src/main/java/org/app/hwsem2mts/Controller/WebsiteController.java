@@ -1,4 +1,14 @@
 package org.app.hwsem2mts.Controller;
 
-public class UserUniversityController {
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/Websity")
+@RequiredArgsConstructor
+@Slf4j
+
+public class WebsiteController {
 }

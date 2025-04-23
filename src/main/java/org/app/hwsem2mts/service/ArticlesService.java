@@ -1,4 +1,4 @@
-package org.app.hwsem2mts.Service;
+package org.app.hwsem2mts.service;
 
-public class UserCourseService {
+public class ArticlesService {
 }

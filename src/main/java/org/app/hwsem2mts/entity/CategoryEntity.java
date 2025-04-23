@@ -1,4 +1,4 @@
-package org.app.hwsem2mts.Entity;
+package org.app.hwsem2mts.entity;
 
-public class UserBookEntity {
+public class CategoryEntity {
 }

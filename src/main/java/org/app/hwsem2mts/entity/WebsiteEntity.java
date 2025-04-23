@@ -1,4 +1,4 @@
-package org.app.hwsem2mts.Entity;
+package org.app.hwsem2mts.entity;
 
-public class UserUniversityEntity {
+public class WebsiteEntity {
 }

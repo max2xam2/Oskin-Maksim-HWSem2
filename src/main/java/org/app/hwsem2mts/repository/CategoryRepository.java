@@ -1,4 +1,4 @@
-package org.app.hwsem2mts.Repository;
+package org.app.hwsem2mts.repository;
 
-public class UserBookRepository {
+public class CategoryRepository {
 }
