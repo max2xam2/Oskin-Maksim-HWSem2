@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: hwsem2MTS
+
+logging:
+  level:
+    org.app.hwsem2mts: DEBUG
