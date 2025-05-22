@@ -7,7 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.app.hwsem2mts.security.SecurityConfig;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
@@ -24,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
 @WebMvcTest(UserController.class)
+@Import(SecurityConfig.class)
 class UserControllerTest {
   @Autowired
   private MockMvc mockMvc;
@@ -36,6 +40,7 @@ class UserControllerTest {
     UserEntity testUser = new UserEntity(1L, "john.doe@example.com", "John Doe" );
     when(userService.createUser(Mockito.any(UserEntity.class))).thenReturn(testUser);
     mockMvc.perform(post("/api/users")
+                    .header("Authorization", "Bearer faketoken123")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{\"name\":\"John Doe\",\"email\":\"john.doe@example.com\"}"))
             .andExpect(status().isCreated())
@@ -57,6 +62,7 @@ class UserControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "admin", roles = {"USER"})
   void getAllUserTestMock() throws Exception {
     UserEntity user1 = new UserEntity(1L, "john.doe@example.com", "John Doe");
     UserEntity user2 = new UserEntity(2L, "jane.doe@example.com", "Jane Doe");

@@ -10,3 +10,11 @@ spring:
 logging:
   level:
     org.app.hwsem2mts: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: "shutdown"
+      base-path: /admin/actuator
