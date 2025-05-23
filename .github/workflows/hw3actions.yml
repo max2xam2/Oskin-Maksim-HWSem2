@@ -1,0 +1,20 @@
+name: installactions
+
+on:
+  push:
+    branches: [HW4-sem2]
+    pull_request:
+      branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: jdk
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: mavenbuild
+        run: mvn clean install
