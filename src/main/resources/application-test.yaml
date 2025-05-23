@@ -1,5 +1,5 @@
 spring:
-  application:
-    name: test-profile
   server:
     port: 8090
+  application:
+    name: test-profile

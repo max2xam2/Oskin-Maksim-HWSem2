@@ -1,5 +1,6 @@
 package org.app.hwsem2mts.controller;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import org.app.hwsem2mts.entity.ArticlesEntity;
 import org.app.hwsem2mts.interfaces.ArticlesInterfaces;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RateLimiter(name = "rateLimiter")
 public class ArticlesController implements ArticlesInterfaces {
   private final ArticlesService articlesService;
 

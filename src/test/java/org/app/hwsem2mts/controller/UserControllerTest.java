@@ -38,9 +38,11 @@ class UserControllerTest {
   @Test
   void createUsetTestMock() throws Exception {
     UserEntity testUser = new UserEntity(1L, "john.doe@example.com", "John Doe" );
-    when(userService.createUser(Mockito.any(UserEntity.class))).thenReturn(testUser);
+    when(userService.createUser(Mockito.anyString(), Mockito.any(UserEntity.class)))
+            .thenReturn(testUser);
     mockMvc.perform(post("/api/users")
                     .header("Authorization", "Bearer faketoken123")
+                    .header("Idempotency-Key", "key-333")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{\"name\":\"John Doe\",\"email\":\"john.doe@example.com\"}"))
             .andExpect(status().isCreated())
@@ -48,7 +50,7 @@ class UserControllerTest {
             .andExpect(jsonPath("$.id").value(1))
             .andExpect(jsonPath("$.name").value("John Doe"))
             .andExpect(jsonPath("$.email").value("john.doe@example.com"));
-    verify(userService, times(1)).createUser(Mockito.any(UserEntity.class));
+    verify(userService, times(1)).createUser(Mockito.eq("key-333"),Mockito.any(UserEntity.class));
   }
 
   @Test

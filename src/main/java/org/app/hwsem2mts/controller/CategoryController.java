@@ -8,11 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.net.URI;
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@CircuitBreaker(name = "circuitBreaker")
 public class CategoryController implements CategoryInterfaces {
   private final CategoryService categoryService;
 

@@ -6,13 +6,16 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
-
 import java.time.Instant;
 import java.time.Duration;
 
 @Aspect
 @Component
 public class LoggingAspect {
+  private int count = 0;
+  public int getCount() {
+    return count;
+  }
 
   @Before("execution(* org.app.hwsem2mts.controller..*(..))")
   public void nameControllerAspect(JoinPoint joinPoint) {
@@ -21,11 +24,13 @@ public class LoggingAspect {
 
   @Around("execution(* org.app.hwsem2mts.controller..*(..))")
   public Object checkTimeControllerAspect(ProceedingJoinPoint joinPoint) throws Throwable {
+    count++;
     Instant startTime = Instant.now();
     Object result = joinPoint.proceed();
     Instant endTime = Instant.now();
     Duration duration = Duration.between(startTime, endTime);
-    System.out.println(joinPoint.getSignature().getName() + "выполнялся" + duration.toMillis() + "мс");
+    System.out.println(joinPoint.getSignature().getName() + " выполнялся " + duration.toMillis() + " мс.");
+    count++;
     return result;
   }
 }

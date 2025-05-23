@@ -2,7 +2,7 @@ name: installactions
 
 on:
   push:
-    branches: [HW3-sem2]
+    branches: [HW4-sem2]
     pull_request:
       branches: [main]
 jobs:

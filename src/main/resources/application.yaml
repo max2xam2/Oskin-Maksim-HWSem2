@@ -1,6 +1,3 @@
-server:
-  port: 8080
-
 spring:
   application:
     name: hwsem2MTS
@@ -18,3 +15,25 @@ management:
         include: "*"
         exclude: "shutdown"
       base-path: /admin/actuator
+
+server:
+  port: 8080
+  tomcat:
+    threads:
+      min-spare: 10
+      max: 210
+
+resilience4j.ratelimiter:
+  instances:
+    rateLimiterAPI:
+      limitForPeriod: 5
+      limitRefreshPeriod: 10s
+      timeoutDuration: 0
+resilience4j.circuitbreaker:
+  instances:
+    CircuitBreakerAPI:
+      failureRateThreshold: 50
+      waitDurationInOpenState: 10s
+      permittedNumberOfCallsInHalfOpenState: 3
+      slidingWindowType: count_based
+      slidingWindowSize: 10
