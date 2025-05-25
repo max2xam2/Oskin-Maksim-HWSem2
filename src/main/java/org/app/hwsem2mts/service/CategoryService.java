@@ -6,6 +6,7 @@ import org.app.hwsem2mts.entity.CategoryEntity;
 import org.app.hwsem2mts.exception.EntityNotFoundException;
 import org.app.hwsem2mts.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Slf4j
@@ -14,22 +15,30 @@ import java.util.List;
 public class CategoryService {
   private final CategoryRepository categoryRepository;
 
+  @Transactional(readOnly = true)
   public List<CategoryEntity> getAllCategories() {
     log.debug("getAllCategories() method was called");
-    return categoryRepository.getAll();
+    return categoryRepository.findAll();
   }
 
+  @Transactional(readOnly = true)
   public CategoryEntity getCategoryById(Long id) {
     log.debug("getCategoryById method was called");
-    return categoryRepository.getById(id)
-            .orElseThrow(EntityNotFoundException::new);
+    return categoryRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException());
   }
 
+  @Transactional
   public boolean deleteCategory(Long id) {
     log.debug("deleteCategory method was called");
-    return categoryRepository.deleteById(id);
+    if (categoryRepository.existsById(id)) {
+      categoryRepository.deleteById(id);
+      return true;
+    }
+    return false;
   }
 
+  @Transactional
   public CategoryEntity createCategory(CategoryEntity category) {
     log.debug("create new category");
     return categoryRepository.save(category);

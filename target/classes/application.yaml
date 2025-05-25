@@ -3,6 +3,21 @@ spring:
     name: hwsem2MTS
   profiles:
     active: test
+  datasource:
+    url: jdbc:postgresql://localhost:5432/courses_app
+    username: postgres
+    password: password
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
 
 logging:
   level:

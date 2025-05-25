@@ -7,6 +7,8 @@ import org.app.hwsem2mts.exception.EntityNotFoundException;
 import org.app.hwsem2mts.repository.UserRepository;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,6 +22,7 @@ public class UserService {
 
   private final Set<String> checkKeysServise = ConcurrentHashMap.newKeySet();
 
+  @Transactional(readOnly = true)
   public List<UserEntity> getAllUsers() {
     log.info("get all users");
     return userRepository.findAll();
@@ -32,10 +35,11 @@ public class UserService {
   * после этого на запрос с таким же ключом,
   * операции выполняться не будут. А если ключ найден,
   * то пробрасываем ошибку */
+  @Transactional
   public UserEntity createUser(String keyID, UserEntity user) {
     if (!checkKeysServise.contains(keyID)) {
       log.info("create new user");
-      UserEntity newUserSave = userRepository.saveUser(user);
+      UserEntity newUserSave = userRepository.save(user);
       checkKeysServise.add(keyID);
       return newUserSave;
     } else {
@@ -43,31 +47,30 @@ public class UserService {
     }
   }
 
+  @Transactional
   public void delete(Long userId) {
     log.info("delete user");
     userRepository.deleteById(userId);
   }
 
+  @Transactional
   @Async
   public UserEntity updateUser(Long id, UserEntity user) {
-    UserEntity existing = userRepository.findById(id);
-    if (existing == null) {
-      throw new EntityNotFoundException();
-    }
+    UserEntity existing = userRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException());
     existing.setEmail(user.getEmail());
     existing.setName(user.getName());
     log.info("update user");
-    return userRepository.updateUser(existing);
+    return userRepository.save(existing);
   }
 
+  @Transactional
   public UserEntity patchUser(Long id, UserEntity user) {
-    UserEntity changing = userRepository.findById(id);
-    if (changing == null) {
-      throw new EntityNotFoundException();
-    }
-    if (user.getEmail() != null) changing.setEmail(user.getEmail());
-    if (user.getName() != null) changing.setName(user.getName());
+    UserEntity existing = userRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException());
+    if (user.getEmail() != null) existing.setEmail(user.getEmail());
+    if (user.getName() != null) existing.setName(user.getName());
     log.info("patch user");
-    return userRepository.updateUser(changing);
+    return userRepository.save(existing);
   }
 }

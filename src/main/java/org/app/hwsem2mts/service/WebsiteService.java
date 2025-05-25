@@ -8,6 +8,7 @@ import org.app.hwsem2mts.repository.WebsiteRepository;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Slf4j
@@ -16,16 +17,23 @@ import java.util.List;
 public class WebsiteService {
   private final WebsiteRepository websiteRepository;
 
+  @Transactional
   public List<WebsiteEntity> findAll() {
     log.info("all websites found");
-    return websiteRepository.getWebsites();
+    return websiteRepository.findAll();
   }
 
+  @Transactional
   public boolean deleteWebsite(Long id) {
     log.info("deleting website {}", id);
-    return websiteRepository.deleteWebsiteById(id);
+    if (websiteRepository.existsById(id)) {
+      websiteRepository.deleteById(id);
+      return true;
+    }
+    return false;
   }
 
+  @Transactional(readOnly = true)
   /*Пытаемся получить вебсайт по ID с повторными попытками через каждые 10 секунд, 5 раз
    * например, может быть недоступен сервер или задержка появления этих данных в базе*/
   @Retryable(
@@ -35,12 +43,13 @@ public class WebsiteService {
   )
   public WebsiteEntity getWebsiteById(Long id) {
     log.info("getting website {}", id);
-    return websiteRepository.getWebsiteById(id)
-            .orElseThrow(EntityNotFoundException::new);
+    return websiteRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException());
   }
 
+  @Transactional
   public WebsiteEntity addWebsite(WebsiteEntity website) {
     log.info("adding website {}", website);
-    return websiteRepository.addWebsite(website);
+    return websiteRepository.save(website);
   }
 }

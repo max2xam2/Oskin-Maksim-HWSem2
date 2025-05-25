@@ -11,7 +11,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 @EnableRetry
 public class Hwsem2MtsApplication {
-
   public static void main(String[] args) {
     SpringApplication.run(Hwsem2MtsApplication.class, args);
   }
